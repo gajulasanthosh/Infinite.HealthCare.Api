@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace Infinite.HealthCare.Api.Controllers
@@ -15,11 +16,13 @@ namespace Infinite.HealthCare.Api.Controllers
     {
         private readonly IRepository<Doctor> _repository;
         private readonly IGetRepository<Doctor> _getRepository;
+        private readonly ApplicationDbContext _dbContext;
 
-        public DoctorController(IRepository<Doctor> repository, IGetRepository<Doctor> getRepository)
+        public DoctorController(IRepository<Doctor> repository, IGetRepository<Doctor> getRepository,ApplicationDbContext dbContext)
         {
             _repository = repository;
             _getRepository = getRepository;
+            _dbContext = dbContext;
         }
 
         [HttpGet("GetAllDoctors")]
@@ -47,13 +50,15 @@ namespace Infinite.HealthCare.Api.Controllers
 
                 return BadRequest();
             }
-            await _repository.Create(doctor);
-            //int id = patient.CustomerId;
+            //int id = doctor.UserId;
             //var loginId = User.FindFirstValue(ClaimTypes.Name);
 
-            //var userinDb = _dbContext.Users.FirstOrDefault(x => x.LoginID == loginId);
-            //userinDb.CustomerID = id;
-            //_dbContext.Users.Update(userinDb);
+            //var userinDb = _dbContext.Users.FirstOrDefault(x => x.UserName == loginId);
+            //userinDb.Id = id;
+            //doctor.UserId = id;
+            await _repository.Create(doctor);
+            
+            //_dbContext.Users.Update(doctor);
             //_dbContext.SaveChanges();
             return CreatedAtRoute("GetDoctorById", new { id = doctor.Id }, doctor);
 

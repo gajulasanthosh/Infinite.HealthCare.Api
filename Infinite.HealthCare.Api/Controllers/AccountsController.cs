@@ -90,5 +90,19 @@ namespace Infinite.HealthCare.Api.Controllers
             return new JwtSecurityTokenHandler().WriteToken(token);
 
         }
+
+        [HttpGet("GetName")]
+        public IActionResult GetName()
+        {
+            var login = User.FindFirstValue(ClaimTypes.Name);
+            return Ok(login);
+        }
+
+        [HttpGet("GetRole")]
+        public IActionResult GetRole()
+        {
+            var Role = User.FindFirstValue(ClaimTypes.Role);
+            return Ok(Role);
+        }
     }
 }
