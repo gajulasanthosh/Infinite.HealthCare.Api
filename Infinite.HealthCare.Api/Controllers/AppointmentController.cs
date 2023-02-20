@@ -1,5 +1,6 @@
 ﻿using Infinite.HealthCare.Api.Models;
 using Infinite.HealthCare.Api.Repositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -14,24 +15,28 @@ namespace Infinite.HealthCare.Api.Controllers
     public class AppointmentController : ControllerBase
     {
         private readonly IRepository<Appointment> _repository;
-        private readonly IGetRepository<Appointment> _getRepository;
+        private readonly ISpecRepository _specRepository;
+        private readonly IGetRepository<AppointmentDto> _appointmentDtoReposiory; 
 
-        public AppointmentController(IRepository<Appointment> repository, IGetRepository<Appointment> getRepository)
+        public AppointmentController(IRepository<Appointment> repository, IGetRepository<AppointmentDto> getDtoRepository, ISpecRepository specRepository)
         {
             _repository = repository;
-            _getRepository = getRepository;
+            _specRepository = specRepository;
+            _appointmentDtoReposiory = getDtoRepository;
         }
 
+        [Authorize(Roles ="Admin,Doctor")]
         [HttpGet("GetAllAppointments")]
-        public IEnumerable<Appointment> GetAllAppointments()
+        public IEnumerable<AppointmentDto> GetAllAppointments()
         {
-            return _getRepository.GetAll();
+            return _appointmentDtoReposiory.GetAll();
         }
 
+        [Authorize]
         [HttpGet("GetAppointmentById/{id}", Name = "GetAppointmentById")]
         public async Task<IActionResult> GetAppointmentById(int id)
         {
-            var appointment = await _getRepository.GetById(id);
+            var appointment = await _appointmentDtoReposiory.GetById(id);
             if (appointment != null)
             {
                 return Ok(appointment);
@@ -39,6 +44,7 @@ namespace Infinite.HealthCare.Api.Controllers
             return NotFound("Appointment not found");
         }
 
+        [Authorize(Roles ="Patient")]
         [HttpPost("CreateAppointment")]
         public async Task<IActionResult> CreateAppointment([FromBody] Appointment appointment)
         {
@@ -53,7 +59,7 @@ namespace Infinite.HealthCare.Api.Controllers
         }
 
        
-
+        [Authorize(Roles ="Patient")]
         [HttpDelete("DeleteAppointment/{id}")]
         public async Task<IActionResult> DeleteAppointment(int id)
         {
@@ -63,6 +69,14 @@ namespace Infinite.HealthCare.Api.Controllers
                 return Ok();
             }
             return NotFound("Appointment not found");
+        }
+
+        [HttpGet("GetSpecializations")]
+        //Get Specializations
+        public async Task<IActionResult> GetSpecializations()
+        {
+            var specs = await _specRepository.GetSpecializations();
+            return Ok(specs);
         }
     }
 }

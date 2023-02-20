@@ -1,5 +1,6 @@
 ﻿using Infinite.HealthCare.Api.Models;
 using Infinite.HealthCare.Api.Repositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -31,6 +32,7 @@ namespace Infinite.HealthCare.Api.Controllers
             return _getRepository.GetAll();
         }
 
+        //[Authorize(Roles ="Admin,Doctor")]
         [HttpGet("GetDoctorById/{id}", Name = "GetDoctorById")]
         public async Task<IActionResult> GetDoctorById(int id)
         {
@@ -42,6 +44,7 @@ namespace Infinite.HealthCare.Api.Controllers
             return NotFound("Doctor not found");
         }
 
+        [Authorize(Roles ="Admin")]
         [HttpPost("CreateDoctor")]
         public async Task<IActionResult> CreateDoctor([FromBody] Doctor doctor)
         {
@@ -64,6 +67,7 @@ namespace Infinite.HealthCare.Api.Controllers
 
         }
 
+        [Authorize(Roles = "Admin,Doctor")]
         [HttpPut("UpdateDoctor/{id}")]
         public async Task<IActionResult> UpdateDoctor(int id, Doctor doctor)
         {
@@ -79,6 +83,7 @@ namespace Infinite.HealthCare.Api.Controllers
             return NotFound("Doctor not found");
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpDelete("DeleteDoctor/{id}")]
         public async Task<IActionResult> DeleteDoctor(int id)
         {

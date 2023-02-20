@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Infinite.HealthCare.Api.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -16,5 +17,10 @@ namespace Infinite.HealthCare.Api.Repositories
     {
         IEnumerable<T> GetAll();
         Task<T> GetById(int id);
+    }
+
+    public interface ISpecRepository
+    {
+        Task<IEnumerable<Specialization>> GetSpecializations();
     }
 }

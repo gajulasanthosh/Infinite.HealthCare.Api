@@ -51,8 +51,9 @@ namespace Infinite.HealthCare.Api
             services.AddScoped<IGetRepository<Patient>, PatientRepository>();
             services.AddScoped<IRepository<Doctor>, DoctorRepository>();
             services.AddScoped<IGetRepository<Doctor>, DoctorRepository>();
-            services.AddScoped<IGetRepository<Appointment>, AppointmentRepository>();
+            services.AddScoped<IGetRepository<AppointmentDto>, AppointmentRepository>();
             services.AddScoped<IRepository<Appointment>, AppointmentRepository>();
+            services.AddScoped<ISpecRepository, AppointmentRepository>();
 
 
             services.AddControllers();

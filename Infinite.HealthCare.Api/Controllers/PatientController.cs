@@ -1,5 +1,6 @@
 ﻿using Infinite.HealthCare.Api.Models;
 using Infinite.HealthCare.Api.Repositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -22,12 +23,14 @@ namespace Infinite.HealthCare.Api.Controllers
             _getRepository = getRepository;
         }
 
+        [Authorize(Roles ="Admin")]
         [HttpGet("GetAllPatients")]
         public IEnumerable<Patient> GetAllPatients()
         {
             return _getRepository.GetAll();
         }
 
+        [Authorize]
         [HttpGet("GetPatientById/{id}", Name = "GetPatientById")]
         public async Task<IActionResult> GetPatientById(int id)
         {
@@ -39,6 +42,7 @@ namespace Infinite.HealthCare.Api.Controllers
             return NotFound("Patient not found");
         }
 
+        [Authorize]
         [HttpPost("CreatePatient")]
         public async Task<IActionResult> Createpatient([FromBody] Patient patient)
         {
@@ -59,6 +63,7 @@ namespace Infinite.HealthCare.Api.Controllers
 
         }
 
+        [Authorize]
         [HttpPut("UpdatePatient/{id}")]
         public async Task<IActionResult> UpdatePatient(int id, Patient patient)
         {
@@ -74,6 +79,7 @@ namespace Infinite.HealthCare.Api.Controllers
             return NotFound("Patient not found");
         }
 
+        [Authorize(Roles ="Admin")]
         [HttpDelete("DeletePatient/{id}")]
         public async Task<IActionResult> DeletePatient(int id)
         {
