@@ -81,6 +81,7 @@ namespace Infinite.HealthCare.Api.Controllers
             {
                 new Claim(ClaimTypes.Role,user.Role),
                 new Claim(ClaimTypes.Name,user.UserName),
+                
 
             };
             var token = new JwtSecurityToken(issuer: _Configuration["JWT:issuer"],
@@ -103,6 +104,15 @@ namespace Infinite.HealthCare.Api.Controllers
         {
             var Role = User.FindFirstValue(ClaimTypes.Role);
             return Ok(Role);
+        }
+
+        [HttpGet("GetId")]
+        public IActionResult GetId()
+        {
+            var role = User.FindFirstValue(ClaimTypes.Name);
+            var roleInDb = _dbContext.Users.FirstOrDefault(x => x.UserName == role);
+            var userId = roleInDb.Id;
+            return Ok(userId);
         }
     }
 }

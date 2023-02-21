@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace Infinite.HealthCare.Api.Controllers
@@ -16,14 +17,17 @@ namespace Infinite.HealthCare.Api.Controllers
     {
         private readonly IRepository<Patient> _repository;
         private readonly IGetRepository<Patient> _getRepository;
+        private readonly ApplicationDbContext _DbContext;
 
-        public PatientController(IRepository<Patient> repository, IGetRepository<Patient> getRepository)
+        public PatientController(IRepository<Patient> repository, IGetRepository<Patient> getRepository, ApplicationDbContext dbContext)
         {
             _repository = repository;
             _getRepository = getRepository;
+            _DbContext = dbContext;
+            
         }
 
-        [Authorize(Roles ="Admin")]
+        //[Authorize(Roles ="Admin")]
         [HttpGet("GetAllPatients")]
         public IEnumerable<Patient> GetAllPatients()
         {
@@ -52,13 +56,12 @@ namespace Infinite.HealthCare.Api.Controllers
                 return BadRequest();
             }
             await _repository.Create(patient);
-            //int id = patient.CustomerId;
+            
             //var loginId = User.FindFirstValue(ClaimTypes.Name);
-
-            //var userinDb = _dbContext.Users.FirstOrDefault(x => x.LoginID == loginId);
-            //userinDb.CustomerID = id;
-            //_dbContext.Users.Update(userinDb);
-            //_dbContext.SaveChanges();
+            //var userInDb = _DbContext.Users.FirstOrDefault(x => x.UserName == loginId);
+            //userInDb.Id = patient.UserId;
+            //_DbContext.Users.Update();
+            //_DbContext.SaveChanges();
             return CreatedAtRoute("GetPatientById", new { id = patient.Id }, patient);
 
         }
@@ -90,5 +93,8 @@ namespace Infinite.HealthCare.Api.Controllers
             }
             return NotFound("Patient not found");
         }
+
+
+        
     }
 }

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Infinite.HealthCare.Api.Repositories
 {
-    public class AppointmentRepository : IRepository<Appointment>, IGetRepository<AppointmentDto>, ISpecRepository
+    public class AppointmentRepository : IRepository<Appointment>, IGetRepository<AppointmentDto>, ISpecRepository, IAppRepository<Appointment>
     {
         private readonly ApplicationDbContext _DbContext;
 
@@ -84,6 +84,14 @@ namespace Infinite.HealthCare.Api.Repositories
         {
             var specs = await _DbContext.Specializations.ToListAsync();
             return specs;
+        }
+
+        public async Task<IEnumerable<Appointment>> GetAllAppByPatId(int id)
+        {
+            var appointments = await _DbContext.Appointmnets.Where(h => h.PatientId == id).ToListAsync();
+            if (appointments.Count > 0)
+                return appointments;
+            return null;
         }
     }
 }

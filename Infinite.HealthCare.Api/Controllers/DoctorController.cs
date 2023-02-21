@@ -44,7 +44,7 @@ namespace Infinite.HealthCare.Api.Controllers
             return NotFound("Doctor not found");
         }
 
-        [Authorize(Roles ="Admin")]
+        [Authorize(Roles ="Admin,Doctor")]
         [HttpPost("CreateDoctor")]
         public async Task<IActionResult> CreateDoctor([FromBody] Doctor doctor)
         {

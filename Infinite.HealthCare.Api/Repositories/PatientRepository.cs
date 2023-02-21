@@ -1,4 +1,5 @@
 ﻿using Infinite.HealthCare.Api.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -65,5 +66,13 @@ namespace Infinite.HealthCare.Api.Repositories
             }
             return null;
         }
+
+        //public async Task<IEnumerable<Patient>> GetAllAppByPatId(int id)
+        //{
+        //    var appointments = await _DbContext.Patients.Where(h => h.Id == id).ToListAsync();
+        //    if (appointments.Count > 0)
+        //        return appointments;
+        //    return null;
+        //}
     }
 }
