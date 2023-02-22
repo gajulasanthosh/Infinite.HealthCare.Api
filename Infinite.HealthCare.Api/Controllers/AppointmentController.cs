@@ -27,7 +27,7 @@ namespace Infinite.HealthCare.Api.Controllers
             _appRepository = appRepository;
         }
 
-        [Authorize(Roles ="Admin,Doctor")]
+        [Authorize(Roles ="Admin,Doctor,Patient")]
         [HttpGet("GetAllAppointments")]
         public IEnumerable<AppointmentDto> GetAllAppointments()
         {

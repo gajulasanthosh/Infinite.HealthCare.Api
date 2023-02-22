@@ -67,7 +67,7 @@ namespace Infinite.HealthCare.Api.Controllers
 
         }
 
-        [Authorize(Roles = "Admin,Doctor")]
+        [Authorize(Roles = "Admin")]
         [HttpPut("UpdateDoctor/{id}")]
         public async Task<IActionResult> UpdateDoctor(int id, Doctor doctor)
         {
