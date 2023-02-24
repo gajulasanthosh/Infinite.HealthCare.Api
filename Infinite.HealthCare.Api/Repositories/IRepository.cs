@@ -26,6 +26,13 @@ namespace Infinite.HealthCare.Api.Repositories
     public interface IAppRepository<T> where T : class
     {
         Task<IEnumerable<T>> GetAllAppByPatId(int id);
+        
     }
-    
+
+    public interface IAppRepository2<T> where T : class
+    {
+        
+        Task<IEnumerable<T>> GetAllAppByDocId(int id);
+    }
+
 }

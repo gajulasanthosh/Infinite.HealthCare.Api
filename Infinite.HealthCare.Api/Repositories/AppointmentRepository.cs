@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Infinite.HealthCare.Api.Repositories
 {
-    public class AppointmentRepository : IRepository<Appointment>, IGetRepository<AppointmentDto>, ISpecRepository, IAppRepository<Appointment>
+    public class AppointmentRepository : IRepository<Appointment>, IGetRepository<AppointmentDto>, ISpecRepository, IAppRepository<AppointmentDto>, IAppRepository2<AppointmentDto>
     {
         private readonly ApplicationDbContext _DbContext;
 
@@ -86,12 +86,44 @@ namespace Infinite.HealthCare.Api.Repositories
             return specs;
         }
 
-        public async Task<IEnumerable<Appointment>> GetAllAppByPatId(int id)
+        public async Task<IEnumerable<AppointmentDto>> GetAllAppByPatId(int id)
         {
-            var appointments = await _DbContext.Appointmnets.Where(h => h.PatientId == id).ToListAsync();
-            if (appointments.Count > 0)
-                return appointments;
-            return null;
+            var appointments2 = _DbContext.Appointmnets.Where(h => h.PatientId == id).Include(x => x.Doctor).Include(y => y.Patient).Select(x => new AppointmentDto
+            {
+
+                PatientId = x.PatientId,
+                DoctorId = x.DoctorId,
+                AppointmentDate = x.AppointmentDate,
+                AppointmentTime = x.AppointmentTime,
+                Problem = x.Problem,
+                PatientName = x.Patient.FullName,
+                DoctorName = x.Doctor.DoctorName
+            }).ToList();
+
+
+            return appointments2;
         }
+
+        public async Task<IEnumerable<AppointmentDto>> GetAllAppByDocId(int id)
+        {
+            //var appointments = await _DbContext.Appointmnets.Where(h => h.DoctorId == id).ToListAsync();
+            
+                var appointments2 = _DbContext.Appointmnets.Where(h=>h.DoctorId == id).Include(x => x.Doctor).Include(y => y.Patient).Select(x => new AppointmentDto
+                {
+
+                PatientId = x.PatientId,
+                    DoctorId = x.DoctorId,
+                    AppointmentDate = x.AppointmentDate,
+                    AppointmentTime = x.AppointmentTime,
+                    Problem = x.Problem,
+                    PatientName = x.Patient.FullName,
+                    DoctorName = x.Doctor.DoctorName
+                }).ToList();
+
+
+                return appointments2;
+        }
+            //return null;
     }
 }
+

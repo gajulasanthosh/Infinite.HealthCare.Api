@@ -57,11 +57,7 @@ namespace Infinite.HealthCare.Api.Controllers
             }
             await _repository.Create(patient);
             
-            //var loginId = User.FindFirstValue(ClaimTypes.Name);
-            //var userInDb = _DbContext.Users.FirstOrDefault(x => x.UserName == loginId);
-            //userInDb.Id = patient.UserId;
-            //_DbContext.Users.Update();
-            //_DbContext.SaveChanges();
+            
             return CreatedAtRoute("GetPatientById", new { id = patient.Id }, patient);
 
         }

@@ -17,14 +17,17 @@ namespace Infinite.HealthCare.Api.Controllers
         private readonly IRepository<Appointment> _repository;
         private readonly ISpecRepository _specRepository;
         private readonly IGetRepository<AppointmentDto> _appointmentDtoReposiory; 
-        private readonly IAppRepository<Appointment> _appRepository; 
+        private readonly IAppRepository<AppointmentDto> _appRepository;
+        private readonly IAppRepository2<AppointmentDto> _appRepository2;
 
-        public AppointmentController(IRepository<Appointment> repository, IGetRepository<AppointmentDto> getDtoRepository, ISpecRepository specRepository,IAppRepository<Appointment> appRepository)
+        public AppointmentController(IRepository<Appointment> repository, IGetRepository<AppointmentDto> getDtoRepository, ISpecRepository specRepository,IAppRepository<AppointmentDto> appRepository,
+            IAppRepository2<AppointmentDto> appRepository2)
         {
             _repository = repository;
             _specRepository = specRepository;
             _appointmentDtoReposiory = getDtoRepository;
             _appRepository = appRepository;
+            _appRepository2 = appRepository2;
         }
 
         [Authorize(Roles ="Admin,Doctor,Patient")]
@@ -89,7 +92,18 @@ namespace Infinite.HealthCare.Api.Controllers
             {
                 return Ok(appointents);
             }
-            return NotFound("No Appointments in this city");
+            return NotFound("No Appointments for this Patient");
+        }
+
+        [HttpGet("GetAppByDocId/{id}")]
+        public async Task<IActionResult> GetAppByDocId(int id)
+        {
+            var appointents = await _appRepository2.GetAllAppByDocId(id);
+            if (appointents != null)
+            {
+                return Ok(appointents);
+            }
+            return NotFound("No Appointments for this Doctor");
         }
     }
 }

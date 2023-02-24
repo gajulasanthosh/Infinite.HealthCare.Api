@@ -123,5 +123,14 @@ namespace Infinite.HealthCare.Api.Controllers
             var doctor = _dbContext.Doctors.FirstOrDefault(x => x.UserId == roleInDb.Id);
             return Ok(doctor.Id);
         }
+
+        [HttpGet("GetIdforApp")]
+        public IActionResult GetIdforApp()
+        {
+            var role = User.FindFirstValue(ClaimTypes.Name);
+            var roleInDb = _dbContext.Users.FirstOrDefault(x => x.UserName == role);
+            var doctor = _dbContext.Patients.FirstOrDefault(x => x.UserId == roleInDb.Id);
+            return Ok(doctor.Id);
+        }
     }
 }
